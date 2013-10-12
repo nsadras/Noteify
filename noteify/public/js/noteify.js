@@ -52,11 +52,9 @@ function updateVideoContents(data) {
 
 // function that is called when the submit button is pressed
 function submitData() {
-  $(".canvasdiv").removeClass("inactive");
   $(".videocontents").addClass('inactive');
   $(".searchbar").attr("readonly", "readonly");
   $("#facebookG").removeClass('inactive');
-  $(".reloadbuttondiv").removeClass('inactive');
   $(".logospacer").addClass('inactive');
   $.ajax( 'score', {
     data:{'url': "http://www.youtube.com/watch?v=" + video_id},
@@ -64,6 +62,8 @@ function submitData() {
     type:"GET",
     success: function(data) {
       getNotes(data.musicUrl, function(notes, durations) {
+        $(".reloadbuttondiv").removeClass('inactive');
+        $(".canvasdiv").removeClass("inactive");
         drawSheetMusic(notes, durations);
       });
     }
@@ -115,7 +115,6 @@ function drawSheetMusic(notes, durations) {
 
   // }
   $('#facebookG').addClass('inactive');
-  // $(".searchbar").removeAttr("readonly");
   $(".searchbar").addClass('inactive');
   $('.sheetmusictitlediv').append("<p class='sheetmusictitle'>" + video_title + "</p>");
     // var notesarr = [["c/4"],["d/4"],["b/4"],["e/4"]];

@@ -194,7 +194,13 @@ function inverseDurationMapper(duration, isNote) {
     ret_val.push("8");
   }
   else if(duration == 8) {
-    ret_val.push("w");
+    if(!isNote) {
+      ret_val.push("h");
+      ret_val.push("h");
+    }
+    else {
+      ret_val.push("w");
+    }
   }
   for(var i = 0; i < ret_val.length; i++) {
     if(!isNote) {
@@ -323,7 +329,7 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
   }
 
   var id = "canvas" + number;
-  $(".canvasdiv").append("<canvas width='550' height='130' id='" + id + "'>");
+  $(".canvasdiv").append("<canvas width='550' height='150' id='" + id + "'>");
   var id_string = "#" + id;
   var canvas = $(id_string)[0];
   var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
@@ -354,7 +360,7 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
 //   function() {
 //     $(".canvasdiv").removeClass("inactive");
 //     var notes = [["c/4"],["d/4"],["b/4"],["e/4"],["f/4"],["f/4"],["c/4"],["d/4"],["e/4"],["f/4"],["e/4"]];
-//     var durations = ["q", "q", "qr", "8", "8","w","h","w","h","q","8"];
+//     var durations = ["qr", "q", "qr", "8r", "8","w","hr","w","hr","qr","8"];
 //     for(var i = 0; i < notes.length; i++) {
 //       addNoteAndDuration(notes[i], durations[i]); 
 //     }

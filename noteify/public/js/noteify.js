@@ -109,18 +109,113 @@ var durationQueue = [];
 var stanzaIndex = 0;
 var durationQueueLength = 0;
 function addNoteAndDuration(note, duration) {
+  var mappedDuration = durationMapper(duration);
+  if(mappedDuration + durationQueueLength > 8) {
+    var remaining = 8 - durationQueueLength;
+    var toPush = inverseDurationMapper(remaining, duration.indexOf("r") == -1);
+    for(var i = 0; i < toPush.length; i++) {
+      durationQueue.push(toPush[i]);
+      noteQueue.push(note);
+    }
+    drawStanza(noteQueue,durationQueue,stanzaIndex);
+    stanzaIndex++;
+    noteQueue = [];
+    durationQueue = [];
+    var overflow = durationQueueLength + mappedDuration - 8;
+    var overflowPush = inverseDurationMapper(overflow, duration.indexOf("r") == -1);
+    for(var i = 0; i < overflowPush.length; i++) {
+      durationQueue.push(overflowPush[i]);
+      noteQueue.push(note);
+    }
+    durationQueueLength = overflow;
+    stanzaIndex++;
+  }
+  else if(mappedDuration + durationQueueLength == 8){
+    noteQueue.push(note);
+    durationQueue.push(duration);
+    drawStanza(noteQueue,durationQueue,stanzaIndex);
+    noteQueue = [];
+    durationQueue = [];
+    stanzaIndex++;
+    durationQueueLength = 0;
+  }
+  else {
+    noteQueue.push(note);
+    durationQueue.push(duration);
+    durationQueueLength += mappedDuration;
+  }
+}
 
+function finishLastStanza() {
+  if(durationQueueLength == 0) {
+    return;
+  }
+  else {
+    var remaining = 8 - durationQueueLength;
+    var toPush = inverseDurationMapper(remaining, false);
+    for(var i = 0; i < toPush.length; i++) {
+      noteQueue.push(["g/4"]);
+      durationQueue.push(toPush[i]);
+    }
+  }
+  drawStanza(noteQueue, durationQueue, stanzaIndex);
+  noteQueue = [];
+  durationQueue = [];
+  durationQueueLength = 0;
+  stanzaIndex++;
+}
+//takes a duration as a number and outputs it in format of interest
+function inverseDurationMapper(duration, isNote) {
+  var ret_val = [];
+  if(duration == 1) {
+    ret_val.push("8");
+  }
+  else if(duration == 2) {
+    ret_val.push("q");
+  }
+  else if(duration == 3) {
+    ret_val.push("q");
+    ret_val.push("8");
+  }
+  else if(duration == 4) {
+    ret_val.push("h");
+  }
+  else if(duration == 5) {
+    ret_val.push("h");
+    ret_val.push("8");
+  }
+  else if(duration == 6) {
+    ret_val.push("h");
+    ret_val.push("q");
+  }
+  else if(duration == 7) {
+    ret_val.push("h");
+    ret_val.push("q");
+    ret_val.push("8");
+  }
+  else if(duration == 8) {
+    ret_val.push("w");
+  }
+  for(var i = 0; i < ret_val.length; i++) {
+    if(!isNote) {
+      ret_val[i] += "r";
+    }
+  }
+  return ret_val;
 }
 
 function durationMapper(duration) {
   if(duration == "8" || duration == "8r") {
-
+    return 1;
   }
   if(duration == "q" || duration == "qr") {
-
+    return 2;
   }
   if(duration == "h" || duration == "hr") {
-    
+    return 4;
+  }
+  if(duration == "w" || duration == "w") {
+    return 8;
   }
 }
 
@@ -142,78 +237,82 @@ function drawSheetMusic(notes, durations) {
     // var notesarr = [["c/5"],["g/4"],["a/4"],["g/4"]];
     // var durations = ["q", "q", "qr", "q"];
     // drawStanza(notesarr, durations, 0);
-  var index = 0;
-  var currentDuration = 0;
-  var stanzaNotes = [];
-  var stanzaDurations = [];
+    for(var i = 0; i < notes.length; i++) {
+      addNoteAndDuration(notes[i],durations[i]);
+    }
+    finishLastStanza();
+  // var index = 0;
+  // var currentDuration = 0;
+  // var stanzaNotes = [];
+  // var stanzaDurations = [];
 
-  //iterates through an array of stanzas and durations and draws the sheet music!
-  for(var i = 0; i < notes.length; i++) {
-    var noteDuration = durations[i];
-    var note = notes[i];
-    stanzaNotes.push(note);
-    if(noteDuration == "q" || noteDuration == "qr") {
-      currentDuration++;
-      stanzaDurations.push(noteDuration);
-    }
-    else if(noteDuration == "h" || noteDuration == "hr") {
-      if(currentDuration == 3) {
-        currentDuration++;
-        if(noteDuration == "h") {
-          stanzaDurations.push("q");
-          durations[i] = "q";
-        }
-        else {
-          stanzaDurations.push("qr");
-          durations[i] = "qr";
-        }
-        i--;
-      }
-      else {
-        currentDuration+=2;
-        stanzaDurations.push(noteDuration);
-      }
-    }
-    else if(noteDuration == "w" || noteDuration == "wr") {
-      if(currentDuration != 0) {
-        currentDuration = 4;
-        //TODO: Do SEGMENTING OF WHOLE NOTES
-      }
-      else {
-        stanzaDurations.push(noteDuration);
-        currentDuration += 4;
-      }
-    }
+  // //iterates through an array of stanzas and durations and draws the sheet music!
+  // for(var i = 0; i < notes.length; i++) {
+  //   var noteDuration = durations[i];
+  //   var note = notes[i];
+  //   stanzaNotes.push(note);
+  //   if(noteDuration == "q" || noteDuration == "qr") {
+  //     currentDuration++;
+  //     stanzaDurations.push(noteDuration);
+  //   }
+  //   else if(noteDuration == "h" || noteDuration == "hr") {
+  //     if(currentDuration == 3) {
+  //       currentDuration++;
+  //       if(noteDuration == "h") {
+  //         stanzaDurations.push("q");
+  //         durations[i] = "q";
+  //       }
+  //       else {
+  //         stanzaDurations.push("qr");
+  //         durations[i] = "qr";
+  //       }
+  //       i--;
+  //     }
+  //     else {
+  //       currentDuration+=2;
+  //       stanzaDurations.push(noteDuration);
+  //     }
+  //   }
+  //   else if(noteDuration == "w" || noteDuration == "wr") {
+  //     if(currentDuration != 0) {
+  //       currentDuration = 4;
+  //       //TODO: Do SEGMENTING OF WHOLE NOTES
+  //     }
+  //     else {
+  //       stanzaDurations.push(noteDuration);
+  //       currentDuration += 4;
+  //     }
+  //   }
 
-    if(currentDuration == 4) {
-      drawStanza(stanzaNotes, stanzaDurations, index);
-      index++;
-      stanzaNotes = [];
-      stanzaDurations = [];
-      currentDuration = 0;
-    }
-  }
+  //   if(currentDuration == 4) {
+  //     drawStanza(stanzaNotes, stanzaDurations, index);
+  //     index++;
+  //     stanzaNotes = [];
+  //     stanzaDurations = [];
+  //     currentDuration = 0;
+  //   }
+  // }
 
-  if(currentDuration != 4) {
-    var remainingDuration = 4 - currentDuration;
+  // if(currentDuration != 4) {
+  //   var remainingDuration = 4 - currentDuration;
 
-    var lastDuration = "";
-    var lastNote = ["g/4"];
-    stanzaNotes.push(lastNote);
-    if(remainingDuration == 1) {
-      lastDuration = "qr";
-    }
-    else if(remainingDuration == 2) {
-      lastDuration = "hr";
-    }
-    else {
-      stanzaDurations.push("hr");
-      lastDuration = "qr";
-      stanzaNotes.push(lastNote);
-    }
-    stanzaDurations.push(lastDuration);
-    drawStanza(stanzaNotes, stanzaDurations, index);
-  }
+  //   var lastDuration = "";
+  //   var lastNote = ["g/4"];
+  //   stanzaNotes.push(lastNote);
+  //   if(remainingDuration == 1) {
+  //     lastDuration = "qr";
+  //   }
+  //   else if(remainingDuration == 2) {
+  //     lastDuration = "hr";
+  //   }
+  //   else {
+  //     stanzaDurations.push("hr");
+  //     lastDuration = "qr";
+  //     stanzaNotes.push(lastNote);
+  //   }
+  //   stanzaDurations.push(lastDuration);
+  //   drawStanza(stanzaNotes, stanzaDurations, index);
+  // }
 }
 
 function drawStanza(stanzaNotes, stanzaDurations, number)
@@ -224,7 +323,7 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
   }
 
   var id = "canvas" + number;
-  $(".canvasdiv").append("<canvas width='550' height='100' id='" + id + "'>");
+  $(".canvasdiv").append("<canvas width='550' height='130' id='" + id + "'>");
   var id_string = "#" + id;
   var canvas = $(id_string)[0];
   var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
@@ -254,10 +353,11 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
 // $(document).ready(
 //   function() {
 //     $(".canvasdiv").removeClass("inactive");
-//     var notes = [["c/4"],["d/4"],["b/4"],["e/4"],["f/4"]];
-//     var durations = ["q", "q", "qr", "8", "8"];
-//     for(var i = 0; i < 5; i++) {
-//       drawStanza(notes, durations, i);  
+//     var notes = [["c/4"],["d/4"],["b/4"],["e/4"],["f/4"],["f/4"],["c/4"],["d/4"],["e/4"],["f/4"],["e/4"]];
+//     var durations = ["q", "q", "qr", "8", "8","w","h","w","h","q","8"];
+//     for(var i = 0; i < notes.length; i++) {
+//       addNoteAndDuration(notes[i], durations[i]); 
 //     }
+//     finishLastStanza();
 //   }
 // );

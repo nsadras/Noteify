@@ -64,7 +64,11 @@ function submitData() {
       getNotes(data.musicUrl, function(notes, durations) {
         $(".reloadbuttondiv").removeClass('inactive');
         $(".canvasdiv").removeClass("inactive");
-        drawSheetMusic(notes, durations);
+        if(notes < -10){
+          finishLastStanza();
+        } else {
+          drawSheetMusic(notes, durations);
+        }
       });
     }
   });

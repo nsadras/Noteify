@@ -67,7 +67,7 @@ function getNotes(url, callback) {
 
   if(pause_count > 10 || dancer.getTime() > 30){
     dancer.pause();
-    return;
+    callback(-42, -42);
   }
   });
 

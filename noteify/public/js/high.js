@@ -10,6 +10,8 @@ var last_time = 0;
 var MIN_LENGTH = 10;
 var VOLUME_THRESHOLD = .01;
 var SAMPLING_RATE = 22050; //change this to your computer's sampling rate
+// var SAMPLING_RATE = 24000; //change this to your computer's sampling rate
+
 
 // These are the final results
 var notesarr = [];
@@ -19,12 +21,16 @@ var durations = [];
 function getNotes(url, callback) {
   dancer.load({ src: '/data/?file=' + url });
   dancer.setVolume(0);
+  // dancer.load({ src: url }); //TODO remove
   dancer.play();
 
   dancer.after(0, function(){
   // console.log(dancer.getSpectrum());
   array = dancer.getSpectrum();
   console.log(dancer.getTime());
+  if(last_time == dancer.getTime())
+    pause_count++;
+  last_time = dancer.getTime();
 
   var merged = false;
   var freq = fuzzy_index(array) * SAMPLING_RATE / 512;
@@ -46,7 +52,6 @@ function getNotes(url, callback) {
   } else{
     if(freq == 0){
       console.log("gap");
-      pause_count++;
       index++;
       notes[index] = {};
       notes[index]["note"] = "tongue";
@@ -54,9 +59,6 @@ function getNotes(url, callback) {
       scientific = 0;
     } else {
       // console.log(" ");
-      if(last_time == dancer.getTime())
-        pause_count++;
-      last_time = dancer.getTime();
     }
 
     if(pause_count > 30){
@@ -67,6 +69,7 @@ function getNotes(url, callback) {
       for(var i = 0; i < notesarr.length; i++){
         console.log(notesarr[i][0] + " " + durations[i]);
       }
+      callback(notesarr, durations);
     }
   }
   });

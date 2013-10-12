@@ -10,16 +10,17 @@ module.exports = {
     var stream = ytdl(url);
     var wavFile = './data/' + counter + '.wav';
 
-    try {
-      var proc = new ffmpeg({source: stream})
-        .toFormat('wav')
-        .setDuration(30)
-        .saveToFile(wavFile, function(stdout, stderr){
-          callback(counter + '.wav');
-          counter++;
-        });
-    } catch (error){
-      console.log('meh, error. hopefully ok');
-    }
+    process.on('uncaughtException',function(error){
+      console.log(error);
+    })
+
+    var proc = new ffmpeg({source: stream})
+      .toFormat('wav')
+      .setDuration(30)
+      .saveToFile(wavFile, function(stdout, stderr){
+        callback(counter + '.wav');
+        counter++;
+      });
+
   }
 }

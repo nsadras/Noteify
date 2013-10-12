@@ -13,8 +13,6 @@ exports.score = function(req, res){
     console.log('done downloading and converting');
     res.json({musicUrl: fileURl});
   });
-  // var url = 'twinkle.mp3';
-  // res.json({musicUrl: url});
 }
 
 exports.data = function(req, res){

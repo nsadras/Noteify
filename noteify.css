@@ -16,3 +16,7 @@ input.searchbar{
 .headerdiv {
 	height:100px;
 }
+
+body{
+	background-image:url('musical_notes_background.jpg');
+}

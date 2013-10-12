@@ -58,18 +58,16 @@ function submitData() {
   $("#facebookG").removeClass('inactive');
   $(".reloadbuttondiv").removeClass('inactive');
   $(".logospacer").addClass('inactive');
-  $.ajax(
-    {
-      // data:{'video_id':video_id},
-      data:{'url':"http://www.youtube.com/watch?v=" + video_id},
-      dataType:"JSON",
-      type:"GET",
-      url:"/score",
-      success:drawSheetMusic
+  $.ajax( 'score', {
+    data:{'url': "http://www.youtube.com/watch?v=" + video_id},
+    dataType:"JSON",
+    type:"GET",
+    success: function(data) {
+      getNotes(data.musicUrl, function(notes, durations) {
+        drawSheetMusic(notes, durations);
+      });
     }
-  );
-  drawSheetMusic(5);
-
+  });
 }
 
 /*************** SEARCHBAR JAVASCRIPT **********/
@@ -106,14 +104,14 @@ $(document).ready(
 });
 
 //draws the sheet music!
-function drawSheetMusic(data) {
+function drawSheetMusic(notes, durations) {
   // var stanza = 0;
   // for(var i = 0; i < notes.length; i++) {
   // var notes = data['notes']
   // var durations = data['durations']
 
-  var notes = [["a/4"],["b/4"],["c/4"],["d/4"],["c/4"],["f/4"],["e/4"],["g/4"],["a/4"],["c/5"],["e/5"],["e/5"]];
-  var durations = ["q", "q", "h", "q", "qr", "q","q","w","q","hr","q","q"];
+  // var notes = [["a/4"],["b/4"],["c/4"],["d/4"],["c/4"],["f/4"],["e/4"],["g/4"],["a/4"],["c/5"],["e/5"],["e/5"]];
+  // var durations = ["q", "q", "h", "q", "qr", "q","q","w","q","hr","q","q"];
 
   // }
   $('#facebookG').addClass('inactive');

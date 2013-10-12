@@ -131,8 +131,16 @@ function addNoteAndDuration(note, duration) {
     stanzaIndex++;
   }
   else if(mappedDuration + durationQueueLength == 8){
-    noteQueue.push(note);
-    durationQueue.push(duration);
+    if(duration != "wr") {
+      noteQueue.push(note);
+      durationQueue.push(duration);
+    }
+    else {
+      noteQueue.push(note);
+      noteQueue.push(note);
+      durationQueue.push("hr");
+      durationQueue.push("hr");
+    }
     drawStanza(noteQueue,durationQueue,stanzaIndex);
     noteQueue = [];
     durationQueue = [];
@@ -220,7 +228,7 @@ function durationMapper(duration) {
   if(duration == "h" || duration == "hr") {
     return 4;
   }
-  if(duration == "w" || duration == "w") {
+  if(duration == "w" || duration == "wr") {
     return 8;
   }
 }
@@ -361,7 +369,7 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
 //   function() {
 //     $(".canvasdiv").removeClass("inactive");
 //     var notes = [["c/4"],["d/4"],["b/4"],["e/4"],["f/4"],["f/4"],["c/4"],["d/4"],["e/4"],["f/4"],["e/4"]];
-//     var durations = ["qr", "q", "qr", "8r", "8","w","hr","w","hr","qr","8"];
+//     var durations = ["qr", "q", "qr", "8r", "8","wr","hr","w","hr","qr","8"];
 //     for(var i = 0; i < notes.length; i++) {
 //       addNoteAndDuration(notes[i], durations[i]); 
 //     }

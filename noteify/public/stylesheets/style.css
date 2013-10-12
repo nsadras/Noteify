@@ -3,18 +3,16 @@ body{
     padding: 0;
     background: black;
     font-weight: 300;
-    /*background-image:url("../images/background.jpg");*/
+    background-image: url('../images/background.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .inactive {
     display:none !important;
-}
-
-img.background {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: -10;
 }
 
 img.logo {
@@ -37,7 +35,6 @@ input.searchbar{
 .headerdiv {
     height:100px;
 }
-
 
 .videocontents {
     width:500px;

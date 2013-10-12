@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "Noteify",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "express": "3.4.0",
-    "jade": "*"
+    "jade": "*",
+    "ytdl": "0.1.21",
+    "fluent-ffmpeg": "1.5.2"
   }
 }

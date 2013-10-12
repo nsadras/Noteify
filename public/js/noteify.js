@@ -238,15 +238,16 @@ function drawSheetMusic(notes, durations) {
   // }
   $('#facebookG').addClass('inactive');
   $(".searchbar").addClass('inactive');
-  $('.sheetmusictitlediv').append("<p class='sheetmusictitle'>" + video_title + "</p>");
+  // $('.sheetmusictitlediv').append("<p class='sheetmusictitle'>" + video_title + "</p>");
     // var notesarr = [["c/4"],["d/4"],["b/4"],["e/4"]];
     // var notesarr = [["c/5"],["g/4"],["a/4"],["g/4"]];
     // var durations = ["q", "q", "qr", "q"];
     // drawStanza(notesarr, durations, 0);
-    for(var i = 0; i < notes.length; i++) {
-      addNoteAndDuration(notes[i],durations[i]);
-    }
-    finishLastStanza();
+    // for(var i = 0; i < notes.length; i++) {
+      // addNoteAndDuration(notes[i],durations[i]);
+    // }
+    // finishLastStanza();
+    addNoteAndDuration([notes],durations);
   // var index = 0;
   // var currentDuration = 0;
   // var stanzaNotes = [];

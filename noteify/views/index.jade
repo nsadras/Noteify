@@ -4,7 +4,7 @@ block content
     a(href="/")
         img.logo(src='images/noteify.png')
     input.searchbar(type='text', placeholder='Enter your song!')
-    div(style='height:50px')
+    div(class='logospacer')
     div(class='videocontents inactive')
         div(class='videothumbnail')
         div(class='videodetails')
@@ -13,3 +13,8 @@ block content
         div(id="blockG_2", class="facebook_blockG")
         div(id="blockG_3", class="facebook_blockG")
 
+    div(class='canvasdiv inactive')
+        div(class='sheetmusictitlediv')
+    div(class='reloadbuttondiv inactive')
+        a(href="/", class="reloadbutton") Notify Something Else!
+        //- canvas(id="canvas1", width='550', height='100')

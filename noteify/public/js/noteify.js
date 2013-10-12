@@ -103,6 +103,27 @@ $(document).ready(
   )
 });
 
+
+var noteQueue = [];
+var durationQueue = [];
+var stanzaIndex = 0;
+var durationQueueLength = 0;
+function addNoteAndDuration(note, duration) {
+
+}
+
+function durationMapper(duration) {
+  if(duration == "8" || duration == "8r") {
+
+  }
+  if(duration == "q" || duration == "qr") {
+
+  }
+  if(duration == "h" || duration == "hr") {
+    
+  }
+}
+
 //draws the sheet music!
 function drawSheetMusic(notes, durations) {
   // var stanza = 0;
@@ -229,10 +250,12 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
   // Render voice
   voice.draw(ctx, stave);
 }
+
 // $(document).ready(
 //   function() {
-//     var notes = [["c/4"],["d/4"],["b/4"],["e/4"]];
-//     var durations = ["q", "q", "qr", "q"];
+//     $(".canvasdiv").removeClass("inactive");
+//     var notes = [["c/4"],["d/4"],["b/4"],["e/4"],["f/4"]];
+//     var durations = ["q", "q", "qr", "8", "8"];
 //     for(var i = 0; i < 5; i++) {
 //       drawStanza(notes, durations, i);  
 //     }

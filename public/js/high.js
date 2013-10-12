@@ -9,15 +9,15 @@ var last_ampl = 0.000001;
 var MIN_LENGTH = 8;
 var VOLUME_THRESHOLD = .01;
 var QUARTER = -1;
-// var SAMPLING_RATE = 22050; //change this to your computer's sampling rate
-var SAMPLING_RATE = 24000; //change this to your computer's sampling rate
+var SAMPLING_RATE = 22050; //change this to your computer's sampling rate
+// var SAMPLING_RATE = 24000; //change this to your computer's sampling rate
 
 // This starts the playing/parsing
 function getNotes(url, callback) {
-  // dancer.load({ src: '/data/?file=' + url });
+  dancer.load({ src: '/data/?file=' + url });
   // dancer.setVolume(0);
-  console.log("HI");
-  dancer.load({ src: url }); //TODO remove
+  // console.log("HI");
+  // dancer.load({ src: url }); //TODO remove
   dancer.play();
 
   dancer.after(0, function(){
@@ -114,6 +114,6 @@ function getNotes(url, callback) {
   // Converts A5 to a/5
   function process(note){
     note = note.toLowerCase();
-    return note.slice(0, -1) + '/' + (parseInt(note.slice(-1)) - 1);
+    return note.slice(0, -1) + '/' + (parseInt(note.slice(-1)));
   }
 }

@@ -39,8 +39,6 @@ function getNotes(url, callback) {
     note = teoria.note.fromFrequency(freq).note;
   }
 
-  // console.log(note.scientific());
-
   if(note.scientific() != last_note || // if new note
     (ampl - last_ampl) / last_ampl > 3){ // or 3 times louder
 
@@ -49,9 +47,8 @@ function getNotes(url, callback) {
     notes[index] = {"note": note, "duration" : 1};
 
     // maybe save current note
-    // debugger;
     var last = notes[index-1];
-    if(index > 1 && last.duration >= MIN_LENGTH && ((QUARTER > 0) || last_note != 0)){
+    if(index > 2 && last.duration >= MIN_LENGTH && ((QUARTER > 0) || last_note != 0)){
       if(QUARTER < 0 && last.note.scientific() != "R"){
         QUARTER = last.duration;
         console.log("~~~~~" + last.note.scientific() + QUARTER + "~~~~~")

@@ -47,7 +47,22 @@ input.searchbar{
     border-style:solid;
     border-radius:3px;
     border-color:black;
-    background-color:green;
+    /*background-color:green;*/
+    background-color:rgb(242,172,66);
+
+    /* Gradient Stuff */
+    /* IE10 Consumer Preview */ 
+    background-image: -ms-linear-gradient(top left, #FBFFBF 0%, #EFDB29 100%);
+    /* Mozilla Firefox */ 
+    background-image: -moz-linear-gradient(top left, #FBFFBF 0%, #EFDB29 100%);
+    /* Opera */ 
+    background-image: -o-linear-gradient(top left, #FBFFBF 0%, #EFDB29 100%);
+    /* Webkit (Safari/Chrome 10) */ 
+    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #FBFFBF), color-stop(1, #EFDB29));
+    /* Webkit (Chrome 11+) */ 
+    background-image: -webkit-linear-gradient(top left, #FBFFBF 0%, #EFDB29 100%);
+    /* W3C Markup, IE10 Release Preview */ 
+    background-image: linear-gradient(to bottom right, #FBFFBF 0%, #EFDB29 100%);
 }
 
 .videothumbnail {
@@ -64,6 +79,7 @@ input.searchbar{
 
 .videodetails p {
     font-size:16px;
+    font-family:arial,sans-serif;
     margin-top:8px;
     margin-bottom:8px;
 }
@@ -95,6 +111,8 @@ input.searchbar{
     max-width:600px;
     text-align:center;
     background: #eed;
+    border: 10px solid #ddc;
+    padding: 10px;
 }
 
 canvas {
@@ -128,6 +146,7 @@ canvas {
     margin-right:auto;
     max-width:550px;
     text-align:center;
+    margin-bottom:50px;
 }
 
 .reloadbutton {

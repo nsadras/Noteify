@@ -58,14 +58,16 @@ function submitData() {
   $("#facebookG").removeClass('inactive');
   $(".reloadbuttondiv").removeClass('inactive');
   $(".logospacer").addClass('inactive');
-  // $.ajax(
-  //   {
-  //     data:{'video_id':video_id},
-  //     dataType:"JSON",
-  //     type:"POST",
-  //     success:drawSheetMusic
-  //   }
-  // );
+  $.ajax(
+    {
+      // data:{'video_id':video_id},
+      data:{'url':"http://www.youtube.com/watch?v=" + video_id},
+      dataType:"JSON",
+      type:"GET",
+      url:"/score",
+      success:drawSheetMusic
+    }
+  );
   drawSheetMusic(5);
 
 }
@@ -104,18 +106,96 @@ $(document).ready(
 });
 
 //draws the sheet music!
-function drawSheetMusic(notes) {
+function drawSheetMusic(data) {
   // var stanza = 0;
   // for(var i = 0; i < notes.length; i++) {
+  // var notes = data['notes']
+  // var durations = data['durations']
+
+  var notes = [["a/4"],["b/4"],["c/4"],["d/4"],["c/4"],["f/4"],["e/4"],["g/4"],["a/4"],["c/5"],["e/5"],["e/5"]];
+  var durations = ["q", "q", "h", "q", "qr", "q","q","w","q","hr","q","q"];
 
   // }
   $('#facebookG').addClass('inactive');
   // $(".searchbar").removeAttr("readonly");
   $(".searchbar").addClass('inactive');
   $('.sheetmusictitlediv').append("<p class='sheetmusictitle'>" + video_title + "</p>");
-    var notesarr = [["c/4"],["d/4"],["b/4"],["e/4"]];
-    var durations = ["q", "q", "qr", "q"];
-    drawStanza(notesarr, durations, 0);
+    // var notesarr = [["c/4"],["d/4"],["b/4"],["e/4"]];
+    // var notesarr = [["c/5"],["g/4"],["a/4"],["g/4"]];
+    // var durations = ["q", "q", "qr", "q"];
+    // drawStanza(notesarr, durations, 0);
+  var index = 0;
+  var currentDuration = 0;
+  var stanzaNotes = [];
+  var stanzaDurations = [];
+
+  //iterates through an array of stanzas and durations and draws the sheet music!
+  for(var i = 0; i < notes.length; i++) {
+    var noteDuration = durations[i];
+    var note = notes[i];
+    stanzaNotes.push(note);
+    if(noteDuration == "q" || noteDuration == "qr") {
+      currentDuration++;
+      stanzaDurations.push(noteDuration);
+    }
+    else if(noteDuration == "h" || noteDuration == "hr") {
+      if(currentDuration == 3) {
+        currentDuration++;
+        if(noteDuration == "h") {
+          stanzaDurations.push("q");
+          durations[i] = "q";
+        }
+        else {
+          stanzaDurations.push("qr");
+          durations[i] = "qr";
+        }
+        i--;
+      }
+      else {
+        currentDuration+=2;
+        stanzaDurations.push(noteDuration);
+      }
+    }
+    else if(noteDuration == "w" || noteDuration == "wr") {
+      if(currentDuration != 0) {
+        currentDuration = 4;
+        //TODO: Do SEGMENTING OF WHOLE NOTES
+      }
+      else {
+        stanzaDurations.push(noteDuration);
+        currentDuration += 4;
+      }
+    }
+
+    if(currentDuration == 4) {
+      drawStanza(stanzaNotes, stanzaDurations, index);
+      index++;
+      stanzaNotes = [];
+      stanzaDurations = [];
+      currentDuration = 0;
+    }
+  }
+
+  if(currentDuration != 4) {
+    var remainingDuration = 4 - currentDuration;
+
+    var lastDuration = "";
+    var lastNote = ["g/4"];
+    stanzaNotes.push(lastNote);
+    if(remainingDuration == 1) {
+      lastDuration = "qr";
+    }
+    else if(remainingDuration == 2) {
+      lastDuration = "hr";
+    }
+    else {
+      stanzaDurations.push("hr");
+      lastDuration = "qr";
+      stanzaNotes.push(lastNote);
+    }
+    stanzaDurations.push(lastDuration);
+    drawStanza(stanzaNotes, stanzaDurations, index);
+  }
 }
 
 function drawStanza(stanzaNotes, stanzaDurations, number)
@@ -124,6 +204,7 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
   for(var i = 0; i < stanzaNotes.length; i++) {
     notes.push(new Vex.Flow.StaveNote({keys:stanzaNotes[i], duration:stanzaDurations[i]}));
   }
+
   var id = "canvas" + number;
   $(".canvasdiv").append("<canvas width='550' height='100' id='" + id + "'>");
   var id_string = "#" + id;
@@ -133,6 +214,11 @@ function drawStanza(stanzaNotes, stanzaDurations, number)
   var stave = new Vex.Flow.Stave(10, 0, 500);
   stave.addClef("treble").setContext(ctx).draw();
   // Create a voice in 4/4
+  // if(endStanza) {
+  //   var barEnd = new Vex.Flow.BarNote();
+  //   stave.addModifier("barnote").setContext(ctx).draw();
+  // }
+
   var voice = new Vex.Flow.Voice({
     num_beats: 4,
     beat_value: 4,

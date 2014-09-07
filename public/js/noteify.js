@@ -61,7 +61,9 @@ function submitData() {
     dataType:"JSON",
     type:"GET",
     success: function(data) {
+      console.log("DID I GET HERE?");
       getNotes(data.musicUrl, function(notes, durations) {
+        console.log("GETTING NOTES!");
         $(".reloadbuttondiv").removeClass('inactive');
         $(".canvasdiv").removeClass("inactive");
         if(notes < -10){
